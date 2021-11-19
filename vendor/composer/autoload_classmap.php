@@ -7,4 +7,5 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
+    'Illuminate\\Container\\Container' => $baseDir . '/Package/laravel/framework/src/illuminate/Container/Container.php',
 );

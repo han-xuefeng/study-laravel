@@ -3,5 +3,11 @@
     "description": "The Laravel Framework.",
     "keywords": ["framework", "laravel"],
     "license": "MIT",
-    "type": "project"
+    "type": "project",
+    "require": {
+
+    },
+    "autoload": {
+        "classmap": ["Package"]
+    }
 }

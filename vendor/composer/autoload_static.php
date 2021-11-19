@@ -8,6 +8,7 @@ class ComposerStaticInita28ebe6f2b01a72b6cbf95a83877fd07
 {
     public static $classMap = array (
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
+        'Illuminate\\Container\\Container' => __DIR__ . '/../..' . '/Package/laravel/framework/src/illuminate/Container/Container.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
