@@ -14,12 +14,21 @@ class Log
     }
 }
 
-class File
+interface File
 {
 
 }
 
+class Dir
+{
+    private function __construct()
+    {
+
+    }
+}
+
 $container = new Container();
 
-$log = $container->make(Log::class);
+$log = $container->make(File::class);
+$log = $container->make(Dir::class);
 var_dump($log);
