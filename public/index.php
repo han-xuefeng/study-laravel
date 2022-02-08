@@ -8,9 +8,11 @@ require __DIR__.'/../vendor/autoload.php';
 class Log
 {
     public $file;
-    public function __construct(File $file, Dir $a)
+    public $dir;
+    public function __construct(File $file, Dir $dir)
     {
         $this->file = $file;
+        $this->dir = $dir;
     }
 }
 
@@ -29,6 +31,4 @@ class Dir
 
 $container = new Container();
 
-$file = new File();
-$log = $container->make(Log::class, ['file'=>$file]);
-//$log = $container->make(Dir::class);
+$log = $container->make(Log::class);

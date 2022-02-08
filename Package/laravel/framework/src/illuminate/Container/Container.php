@@ -3,6 +3,8 @@
 namespace Illuminate\Container;
 
 use Illuminate\Contracts\Container\BindingResolutionException;
+use Illuminate\Support\Arr;
+use LogicException;
 use ReflectionClass;
 use ReflectionException;
 use ReflectionParameter;
@@ -15,6 +17,15 @@ class Container {
     protected $buildStack = [];
 
     protected $with = [];
+
+    /**
+     * @var array 别名
+     */
+    protected $aliases = [];
+    /**
+     * @var array 绑定上下文映射关系
+     */
+    public $contextual = [];
 
     /**
      * @param $abstract
@@ -39,6 +50,8 @@ class Container {
      */
     protected function resolve($abstract, $parameter =[])
     {
+        $abstract = $this->getAlias($abstract);
+
         $concrete = $abstract;
         $this->with[] = $parameter;
         return $this->build($concrete);
@@ -60,6 +73,7 @@ class Container {
             throw new BindingResolutionException("没有找到实例[".$concrete."]", 0, $exception);
         }
 
+        // 判断实例是否可实例化
         if (!$reflection->isInstantiable()) {
             // 当前类不能实例化的时候
             $this->notInstantiable($concrete);
@@ -73,6 +87,7 @@ class Container {
             return new $concrete;
         }
         $dependencies = $constructor->getParameters();
+
         // 抛出异常， 并将该实例移除构建站
         try {
             $instances = $this->resolveDependencies($dependencies);
@@ -80,7 +95,6 @@ class Container {
             array_pop($this->buildStack);
             throw $exception;
         }
-
 
         array_pop($this->buildStack);
 
@@ -185,6 +199,61 @@ class Container {
         $message = "目标实例[".$concrete."]不能被实例化";
         throw new BindingResolutionException($message);
     }
+
+    /**
+     * Alias a type to a different name.
+     *
+     * @param  string  $abstract
+     * @param  string  $alias
+     * @return void
+     *
+     * @throws LogicException
+     */
+    public function alias ($abstract, $alias) {
+        if ($abstract == $alias) {
+            throw new LogicException("[{$abstract}] is aliased to itself.");
+        }
+
+        $this->aliases[$alias] = $abstract;
+    }
+
+
+    /**
+     * Get the alias for an abstract if available.
+     *
+     * @param  string  $abstract
+     * @return string
+     */
+    public function getAlias($abstract)
+    {
+        if (! isset($this->aliases[$abstract])) {
+            return $abstract;
+        }
+
+        return $this->getAlias($this->aliases[$abstract]);
+    }
+
+    public function when($concrete)
+    {
+        $aliases = [];
+
+        foreach (Arr::wrap($concrete) as $c) {
+            $aliases[] = $this->getAlias($c);
+        }
+
+        return new ContextualBindingBuilder($this, $aliases);
+    }
+
+    /**
+     * @param $concrete
+     * @param $abstract
+     * @param $implementation
+     * @desc 绑定上下文映射关系
+     */
+    public function addContextualBinding($concrete, $abstract, $implementation)
+    {
+        $this->contextual[$concrete][$this->getAlias($abstract)] = $implementation;
+    }
 }
 
 /**
@@ -198,5 +267,8 @@ class Container {
  * 解析依赖：
  * 1.如果没有传入的依赖没有约定，那么此时使用反射类构建参数是，会把参数变量名作为类名称去实例化并抛出异常，此时我们引入with参数来覆盖类做约定的参数。
  * 2.如果没传默认值，而且不能被实例化的依赖，如string  引入这个方法处理resolvePrimitive
+ * 3.引入别名
  *
+ * 外部绑定
+ * 1.上下文绑定
  */
