@@ -8,5 +8,8 @@ $baseDir = dirname($vendorDir);
 return array(
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
     'Illuminate\\Container\\Container' => $baseDir . '/Package/laravel/framework/src/illuminate/Container/Container.php',
+    'Illuminate\\Container\\ContextualBindingBuilder' => $baseDir . '/Package/laravel/framework/src/illuminate/Container/ContextualBindingBuilder.php',
     'Illuminate\\Contracts\\Container\\BindingResolutionException' => $baseDir . '/Package/laravel/framework/src/illuminate/Contracts/Container/BindingResolutionException.php',
+    'Illuminate\\Contracts\\Container\\ContextualBindingBuilder' => $baseDir . '/Package/laravel/framework/src/illuminate/Contracts/Container/ContextualBindingBuilder.php',
+    'Illuminate\\Support\\Arr' => $baseDir . '/Package/laravel/framework/src/illuminate/Support/Arr.php',
 );

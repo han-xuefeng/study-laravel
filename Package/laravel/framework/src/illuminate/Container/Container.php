@@ -52,9 +52,56 @@ class Container {
     {
         $abstract = $this->getAlias($abstract);
 
-        $concrete = $abstract;
+        $concrete = $this->getConcrete($abstract);
         $this->with[] = $parameter;
+
+        // 上下文绑定关系的时候需要判断一下传过来的依赖是否为interface,如果是，需要实例化依赖注入进来的实例
+        var_dump($concrete,$abstract);
+        if ($this->isBuildable($concrete, $abstract)) {
+            $this->build($concrete);
+        } else {
+            $this->make($concrete);
+        }
+
         return $this->build($concrete);
+    }
+
+    protected function isBuildable($concrete, $abstract): bool
+    {
+        return $concrete === $abstract;
+    }
+
+
+    /**
+     * @param string $abstract
+     */
+    protected function getConcrete($abstract)
+    {
+        if (is_null($concrete = $this->getContextualConcrete($abstract))) {
+            return $concrete;
+        }
+        return $abstract;
+    }
+
+    /**
+     * @param string $abstract
+     */
+    protected function getContextualConcrete($abstract)
+    {
+        if (! is_null($bind = $this->findInContextualBinding($abstract))) {
+            return $bind;
+        }
+
+        return $abstract;
+    }
+
+    /**
+     * @param string $abstract
+     * @return mixed|null
+     */
+    protected function findInContextualBinding(string $abstract)
+    {
+        return $this->contextual[end($this->buildStack)][$abstract] ?? null;
     }
 
     /**
