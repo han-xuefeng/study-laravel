@@ -7,11 +7,7 @@ require __DIR__.'/../vendor/autoload.php';
 
 class Log
 {
-    public $sys;
-    public function __construct(Sys $sys)
-    {
-        $this->sys = $sys;
-    }
+
 }
 
 class File implements Sys
@@ -34,9 +30,20 @@ class Dir
 $container = new Container();
 
 
+$log = new Log();
 
-$container->when(Log::class)->needs(Sys::class)->give(File::class);
-var_dump($container);
-$log = $container->make(Log::class);
+//$container->instance('ddd', $log);
 
-var_dump($log);
+$container->rebinding('ddd', function ($c, $i){
+    var_dump($c, $i);
+});
+$container->instance('ddd', $log);
+$a = $container->make('ddd');
+
+var_dump($a);
+
+//$container->when(Log::class)->needs(Sys::class)->give(File::class);
+//var_dump($container);
+//$log = $container->make(Log::class);
+//
+//var_dump($log);

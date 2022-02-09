@@ -2,6 +2,7 @@
 
 namespace Illuminate\Container;
 
+use Closure;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\Arr;
 use LogicException;
@@ -25,7 +26,25 @@ class Container {
     /**
      * @var array 绑定上下文映射关系
      */
-    public $contextual = [];
+    protected $contextual = [];
+
+    protected $instances = [];
+
+    protected $reboundCallbacks = []; // 监听重复绑定的回调
+
+
+    protected static $instance;
+
+    /**
+     * @return Container
+     */
+    public static function getInstance()
+    {
+        if (is_null(static::$instance)) {
+            static::$instance = new static();
+        }
+        return static::$instance;
+    }
 
     /**
      * @param $abstract
@@ -52,6 +71,12 @@ class Container {
     {
         $abstract = $this->getAlias($abstract);
 
+        $needsContextualBuild = $this->getContextualConcrete($abstract);
+
+        if (isset($this->instances[$abstract]) && !$needsContextualBuild) {
+            return $this->instances[$abstract];
+        }
+
         $concrete = $this->getConcrete($abstract);
 
         $this->with[] = $parameter;
@@ -71,6 +96,74 @@ class Container {
         return $concrete === $abstract;
     }
 
+    /**
+     * @desc 绑定已经实例化好的实例
+     * @param $abstract
+     * @param $concrete
+     * @return mixed
+     */
+    public function instance($abstract, $concrete)
+    {
+        $isBound = $this->bound($abstract);
+        unset($this->aliases[$abstract]);
+        $this->instances[$abstract] = $concrete;
+
+        if ($isBound) {
+            $this->rebound($abstract);
+        }
+        return $concrete;
+    }
+
+    /**
+     * @param $abstract
+     * @throws BindingResolutionException
+     * @throws ReflectionException
+     * @desc 重复绑定
+     */
+    protected function rebound($abstract)
+    {
+        $instance = $this->make($abstract);
+
+        foreach ($this->getReboundCallbacks($abstract) as $callback) {
+            call_user_func($callback, $this, $instance);
+        }
+    }
+
+    /**
+     * @param $abstract
+     * @return array|mixed
+     * @desc 返回实例绑定的所有监听器
+     */
+    protected function getReboundCallbacks($abstract)
+    {
+        return $this->reboundCallbacks[$abstract = $this->getAlias($abstract)] ?? [];
+    }
+
+    /**
+     * @param $abstract
+     * @param Closure $callback
+     * @return object
+     * @throws BindingResolutionException
+     * @throws ReflectionException
+     * @desc 注册重复绑定监听器
+     */
+    public function rebinding($abstract, Closure $callback)
+    {
+        $this->reboundCallbacks[$abstract = $this->getAlias($abstract)][] = $callback;
+        if ($this->bound($abstract)) {
+            return $this->make($abstract);
+        }
+    }
+
+    /**
+     * @param $abstract
+     * @desc 判断实例有没有绑定
+     * @return bool
+     */
+    public function bound($abstract)
+    {
+        return isset($this->instances[$abstract]);
+    }
 
     /**
      * @param string $abstract
