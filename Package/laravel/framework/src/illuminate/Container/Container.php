@@ -53,10 +53,10 @@ class Container {
         $abstract = $this->getAlias($abstract);
 
         $concrete = $this->getConcrete($abstract);
+
         $this->with[] = $parameter;
 
         // 上下文绑定关系的时候需要判断一下传过来的依赖是否为interface,如果是，需要实例化依赖注入进来的实例
-        var_dump($concrete,$abstract);
         if ($this->isBuildable($concrete, $abstract)) {
             $this->build($concrete);
         } else {
@@ -77,7 +77,7 @@ class Container {
      */
     protected function getConcrete($abstract)
     {
-        if (is_null($concrete = $this->getContextualConcrete($abstract))) {
+        if (! is_null($concrete = $this->getContextualConcrete($abstract))) {
             return $concrete;
         }
         return $abstract;
@@ -92,14 +92,14 @@ class Container {
             return $bind;
         }
 
-        return $abstract;
+        return null;
     }
 
     /**
      * @param string $abstract
      * @return mixed|null
      */
-    protected function findInContextualBinding(string $abstract)
+    protected function findInContextualBinding($abstract)
     {
         return $this->contextual[end($this->buildStack)][$abstract] ?? null;
     }
@@ -123,6 +123,7 @@ class Container {
         // 判断实例是否可实例化
         if (!$reflection->isInstantiable()) {
             // 当前类不能实例化的时候
+            var_dump($concrete);
             $this->notInstantiable($concrete);
         }
 
@@ -137,6 +138,7 @@ class Container {
 
         // 抛出异常， 并将该实例移除构建站
         try {
+            var_dump('^^^^^^^^^^');
             $instances = $this->resolveDependencies($dependencies);
         } catch (BindingResolutionException $exception) {
             array_pop($this->buildStack);
@@ -158,7 +160,6 @@ class Container {
     protected function resolveDependencies(array $dependencies)
     {
         $results = [];
-
         foreach ($dependencies as $dependency) {
             /**
              * 判断依赖是否做了参数覆盖
@@ -167,11 +168,10 @@ class Container {
                 $results[] = $this->getParameterOverride($dependency);
                 continue;
             }
-
             if ($dependency->getClass() == null) {
                 $this->resolvePrimitive($dependency);
             } else {
-                $results[] = $this->make($dependency->getName());
+                $results[] = $this->make($dependency->getClass()->name);
             }
 
         }
