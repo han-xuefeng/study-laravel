@@ -138,8 +138,11 @@ class Container {
      * 绑定实例与闭包， 在make实例的时候会执行闭包并返回执行闭包后的结果
      * @param $abstract
      * @param null $concrete
+     * @param bool $shared
+     * @throws BindingResolutionException
+     * @throws ReflectionException
      */
-    public function bind($abstract, $concrete = null)
+    public function bind($abstract, $concrete = null, $shared = false)
     {
         $this->dropStaleInstances($abstract);
         if (is_null($concrete)) {
@@ -150,11 +153,32 @@ class Container {
             $concrete = $this->getClosure($abstract, $concrete);
         }
 
-        $this->bindings[$abstract] = compact('concrete');
+        $this->bindings[$abstract] = compact('concrete', 'shared');
 
         if ($this->resolved($abstract)) {
             $this->rebound($abstract);
         }
+    }
+
+    /**
+     *如果没有被绑定过 才会进程绑定
+     *
+     * @param $abstract
+     * @param null $concrete
+     * @param bool $shared
+     * @throws BindingResolutionException
+     * @throws ReflectionException
+     */
+    public function bindIf($abstract, $concrete = null, $shared = false)
+    {
+        if (!$this->bound($abstract)) {
+            $this->bind($abstract, $concrete, $shared);
+        }
+    }
+
+    public function singleton($abstract, $concrete = null)
+    {
+        $this->bind($abstract, $concrete, true);
     }
 
     /**
@@ -244,7 +268,7 @@ class Container {
      */
     public function bound($abstract)
     {
-        return isset($this->instances[$abstract]);
+        return isset($this->instances[$abstract]) || isset($this->bindings[$abstract]);
     }
 
     /**
