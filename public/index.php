@@ -39,18 +39,25 @@ $container = new Container();
 
 $log = new Log();
 
-$container->instance('ddd', $log);
+$container->bind(Log::class, function () {
+    return new Remind();
+});
+
+// 装饰模式
+$obj = $container->make(Log::class);
+var_dump($obj);
+
+
+//$container->instance('ddd', $log);
 
 //$container->rebinding('ddd', function ($c, $i){
 //    var_dump($c, $i);
 //});
 
-$container->refresh('ddd', new Remind(), 'getRemind');
-
-$container->instance('ddd', $log);
-$a = $container->make('ddd');
-
-var_dump($a);
+//$container->refresh('ddd', new Remind(), 'getRemind');
+//
+//$container->instance('ddd', $log);
+//$a = $container->make('ddd');
 
 //$container->when(Log::class)->needs(Sys::class)->give(File::class);
 //var_dump($container);

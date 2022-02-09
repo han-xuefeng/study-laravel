@@ -32,6 +32,9 @@ class Container {
 
     protected $reboundCallbacks = []; // 监听重复绑定的回调
 
+    protected $bindings = []; //通过binding 绑定的
+
+    protected $resolved = [];
 
     protected static $instance;
 
@@ -83,17 +86,21 @@ class Container {
 
         // 上下文绑定关系的时候需要判断一下传过来的依赖是否为interface,如果是，需要实例化依赖注入进来的实例
         if ($this->isBuildable($concrete, $abstract)) {
-            $this->build($concrete);
+            $object = $this->build($concrete);
         } else {
-            $this->make($concrete);
+            $object = $this->make($concrete);
         }
 
-        return $this->build($concrete);
+        $this->resolved[$abstract] = true;
+
+        array_pop($this->with);
+
+        return $object;
     }
 
     protected function isBuildable($concrete, $abstract): bool
     {
-        return $concrete === $abstract;
+        return $concrete === $abstract || $concrete instanceof Closure;
     }
 
     /**
@@ -125,6 +132,68 @@ class Container {
         $this->rebinding($abstract, function ($container, $instance) use ($target, $method) {
             $target->{$method}($instance);
         });
+    }
+
+    /**
+     * 绑定实例与闭包， 在make实例的时候会执行闭包并返回执行闭包后的结果
+     * @param $abstract
+     * @param null $concrete
+     */
+    public function bind($abstract, $concrete = null)
+    {
+        $this->dropStaleInstances($abstract);
+        if (is_null($concrete)) {
+            $abstract = $concrete;
+        }
+
+        if (!$concrete instanceof Closure) {
+            $concrete = $this->getClosure($abstract, $concrete);
+        }
+
+        $this->bindings[$abstract] = compact('concrete');
+
+        if ($this->resolved($abstract)) {
+            $this->rebound($abstract);
+        }
+    }
+
+    /**
+     * 判断实例是否被解析
+     *
+     * @param $abstract
+     * @return bool
+     */
+    protected function resolved($abstract)
+    {
+        $abstract = $this->getAlias($abstract);
+
+        return isset($this->resolved[$abstract]) || isset($this->instances[$abstract]);
+    }
+
+    /**
+     * bind绑定时生成闭包
+     *
+     * @param $abstract
+     * @param $concrete
+     */
+    protected function getClosure($abstract, $concrete)
+    {
+        return function (Container $container, $parameters = []) use ($abstract, $concrete) {
+            if ($abstract == $concrete) {
+                return $container->build($concrete);
+            }
+
+            $container->resolve($concrete, $parameters);
+        };
+    }
+
+    /**
+     * @param $abstract
+     * @desc instance 绑定的解绑
+     */
+    protected function dropStaleInstances($abstract)
+    {
+        unset($this->instances[$abstract], $this->aliases[$abstract]);
     }
 
     /**
@@ -179,13 +248,19 @@ class Container {
     }
 
     /**
-     * @param string $abstract
+     * @param $abstract
+     * @return mixed|null
      */
     protected function getConcrete($abstract)
     {
         if (! is_null($concrete = $this->getContextualConcrete($abstract))) {
             return $concrete;
         }
+
+        if (isset($this->bindings[$abstract])) {
+            return $this->bindings[$abstract]['concrete'];
+        }
+
         return $abstract;
     }
 
@@ -219,6 +294,11 @@ class Container {
      */
     protected function build($concrete)
     {
+
+        if ($concrete instanceof Closure) {
+            return $concrete($this, $this->getLastParameterOverride());
+        }
+
         try {
             $reflection = new ReflectionClass($concrete);
         } catch (ReflectionException $exception) {
@@ -229,7 +309,6 @@ class Container {
         // 判断实例是否可实例化
         if (!$reflection->isInstantiable()) {
             // 当前类不能实例化的时候
-            var_dump($concrete);
             $this->notInstantiable($concrete);
         }
 
@@ -244,7 +323,6 @@ class Container {
 
         // 抛出异常， 并将该实例移除构建站
         try {
-            var_dump('^^^^^^^^^^');
             $instances = $this->resolveDependencies($dependencies);
         } catch (BindingResolutionException $exception) {
             array_pop($this->buildStack);
