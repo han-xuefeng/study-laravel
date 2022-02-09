@@ -115,6 +115,19 @@ class Container {
     }
 
     /**
+     * @desc 重复绑定监听器执行target的method方法
+     * @param $abstract
+     * @param $target
+     * @param $method
+     */
+    public function refresh($abstract, $target, $method)
+    {
+        $this->rebinding($abstract, function ($container, $instance) use ($target, $method) {
+            $target->{$method}($instance);
+        });
+    }
+
+    /**
      * @param $abstract
      * @throws BindingResolutionException
      * @throws ReflectionException

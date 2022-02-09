@@ -27,16 +27,26 @@ class Dir
     }
 }
 
+class Remind{
+    public function getRemind()
+    {
+        echo 'remind';
+    }
+}
+
 $container = new Container();
 
 
 $log = new Log();
 
-//$container->instance('ddd', $log);
+$container->instance('ddd', $log);
 
-$container->rebinding('ddd', function ($c, $i){
-    var_dump($c, $i);
-});
+//$container->rebinding('ddd', function ($c, $i){
+//    var_dump($c, $i);
+//});
+
+$container->refresh('ddd', new Remind(), 'getRemind');
+
 $container->instance('ddd', $log);
 $a = $container->make('ddd');
 
