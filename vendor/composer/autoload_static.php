@@ -8,6 +8,7 @@ class ComposerStaticInita28ebe6f2b01a72b6cbf95a83877fd07
 {
     public static $classMap = array (
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
+        'Illuminate\\Container\\BoundMethod' => __DIR__ . '/../..' . '/Package/laravel/framework/src/illuminate/Container/BoundMethod.php',
         'Illuminate\\Container\\Container' => __DIR__ . '/../..' . '/Package/laravel/framework/src/illuminate/Container/Container.php',
         'Illuminate\\Container\\ContextualBindingBuilder' => __DIR__ . '/../..' . '/Package/laravel/framework/src/illuminate/Container/ContextualBindingBuilder.php',
         'Illuminate\\Contracts\\Container\\BindingResolutionException' => __DIR__ . '/../..' . '/Package/laravel/framework/src/illuminate/Contracts/Container/BindingResolutionException.php',

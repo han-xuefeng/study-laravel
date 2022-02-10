@@ -36,6 +36,10 @@ class Container {
 
     protected $resolved = [];
 
+    protected $extenders = [];
+
+    protected $methodBindings = [];
+
     protected static $instance;
 
     /**
@@ -91,11 +95,31 @@ class Container {
             $object = $this->make($concrete);
         }
 
+        foreach ($this->getExtenders($abstract) as $extender) {
+            $object = $extender($object, $this);
+        }
+
+        if ($this->isShared($abstract) && !$needsContextualBuild) {
+            $this->instances[$abstract] = $object;
+        }
+
         $this->resolved[$abstract] = true;
 
         array_pop($this->with);
 
         return $object;
+    }
+
+    /**
+     * @param $abstract
+     * @return array|mixed
+     * @desc 获取装饰模式的扩展
+     */
+    protected function getExtenders($abstract)
+    {
+        $abstract = $this->getAlias($abstract);
+
+        return $this->extenders[$abstract] ?? [];
     }
 
     protected function isBuildable($concrete, $abstract): bool
@@ -126,12 +150,19 @@ class Container {
      * @param $abstract
      * @param $target
      * @param $method
+     * @throws BindingResolutionException
+     * @throws ReflectionException
      */
     public function refresh($abstract, $target, $method)
     {
         $this->rebinding($abstract, function ($container, $instance) use ($target, $method) {
             $target->{$method}($instance);
         });
+    }
+
+    public function call($callback, array $parameters = [], $defaultMethod = null)
+    {
+        return BoundMethod::call($this, $callback, $parameters, $defaultMethod);
     }
 
     /**
@@ -179,6 +210,34 @@ class Container {
     public function singleton($abstract, $concrete = null)
     {
         $this->bind($abstract, $concrete, true);
+    }
+
+    /**
+     * 容器的装饰模式
+     * @param $abstract
+     * @param Closure $closure
+     */
+    public function extend($abstract, Closure $closure)
+    {
+        $abstract = $this->getAlias($abstract);
+
+        if (isset($this->instances[$abstract])) {
+            $this->instances[$abstract] = $closure($this->instances[$abstract], $this);
+
+            $this->rebound($abstract);
+        } else {
+            $this->extenders[$abstract][] = $closure;
+
+            if ($this->resolved($abstract)) {
+                $this->rebound($abstract);
+            }
+        }
+
+    }
+
+    public function isShared($abstract)
+    {
+        return isset($this->instances[$abstract]) || (isset($this->bindings[$abstract]) && $this->bindings[$abstract]['shared']);
     }
 
     /**
@@ -384,6 +443,17 @@ class Container {
 
         }
         return $results;
+    }
+
+    /**
+     * Determine if the container has a method binding.
+     *
+     * @param  string  $method
+     * @return bool
+     */
+    public function hasMethodBinding($method)
+    {
+        return isset($this->methodBindings[$method]);
     }
 
     /**

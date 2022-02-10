@@ -7,7 +7,10 @@ require __DIR__.'/../vendor/autoload.php';
 
 class Log
 {
-
+    public static function getName(Dep $dep)
+    {
+        var_dump($dep);
+    }
 }
 
 class File implements Sys
@@ -34,18 +37,38 @@ class Remind{
     }
 }
 
+class Dep{
+
+}
+
 $container = new Container();
 
 
-$log = new Log();
+$container->call('Log::getName', ['name' => 333]);
 
-$container->bind(Log::class, function () {
-    return new Remind();
-});
 
-// 装饰模式
-$obj = $container->make(Log::class);
-var_dump($obj);
+//$log = new Log();
+
+# 装饰模式 extend
+
+//$container->extend(Log::class, function ($obj, Container $container) {
+//    return new Remind();
+//});
+//
+//$container->extend(Log::class, function ($obj, Container $container) {
+//    return new File();
+//});
+//
+//$obj = $container->make(Log::class);
+//var_dump($obj);
+
+//$container->bind(Log::class, function () {
+//    return new Remind();
+//});
+//
+//// 装饰模式
+//$obj = $container->make(Log::class);
+//var_dump($obj);
 
 
 //$container->instance('ddd', $log);
