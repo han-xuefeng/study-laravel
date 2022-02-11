@@ -2,6 +2,7 @@
 
 namespace Illuminate\Container;
 
+use ArrayAccess;
 use Closure;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\Arr;
@@ -10,7 +11,7 @@ use ReflectionClass;
 use ReflectionException;
 use ReflectionParameter;
 
-class Container {
+class Container implements ArrayAccess {
 
     /**
      * @var array 构建栈
@@ -327,7 +328,18 @@ class Container {
      */
     public function bound($abstract)
     {
-        return isset($this->instances[$abstract]) || isset($this->bindings[$abstract]);
+        return isset($this->instances[$abstract]) || isset($this->bindings[$abstract]) || $this->isAlias($abstract);
+    }
+
+    /**
+     * Determine if a given string is an alias.
+     *
+     * @param  $name
+     * @return bool
+     */
+    public function isAlias($name)
+    {
+        return isset($this->aliases[$name]);
     }
 
     /**
@@ -578,6 +590,51 @@ class Container {
     public function addContextualBinding($concrete, $abstract, $implementation)
     {
         $this->contextual[$concrete][$this->getAlias($abstract)] = $implementation;
+    }
+
+    public function offsetExists($key)
+    {
+        return $this->bound($key);
+    }
+
+    public function offsetGet($key)
+    {
+        $this->make($key);
+    }
+
+    public function offsetSet($key, $value)
+    {
+        $this->bind($key, $value instanceof Closure ? $value : function() use ($value) {
+            return $value;
+        });
+    }
+
+    public function offsetUnset($key)
+    {
+        unset($this->bindings[$key], $this->instances[$key], $this->resolved[$key]);
+    }
+
+    /**
+     * Dynamically access container services.
+     *
+     * @param  string  $key
+     * @return mixed
+     */
+    public function __get($key)
+    {
+        return $this[$key];
+    }
+
+    /**
+     * Dynamically set container services.
+     *
+     * @param string $key
+     * @param mixed $value
+     * @return void
+     */
+    public function __set(string $key, $value)
+    {
+        $this[$key] = $value;
     }
 }
 
