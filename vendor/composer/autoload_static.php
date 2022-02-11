@@ -14,6 +14,10 @@ class ComposerStaticInita28ebe6f2b01a72b6cbf95a83877fd07
         'Illuminate\\Contracts\\Container\\BindingResolutionException' => __DIR__ . '/../..' . '/Package/laravel/framework/src/illuminate/Contracts/Container/BindingResolutionException.php',
         'Illuminate\\Contracts\\Container\\ContextualBindingBuilder' => __DIR__ . '/../..' . '/Package/laravel/framework/src/illuminate/Contracts/Container/ContextualBindingBuilder.php',
         'Illuminate\\Support\\Arr' => __DIR__ . '/../..' . '/Package/laravel/framework/src/illuminate/Support/Arr.php',
+        'Symfony\\Component\\HttpFoundation\\FileBag' => __DIR__ . '/../..' . '/Package/symfony/http-foundation/FileBag.php',
+        'Symfony\\Component\\HttpFoundation\\ParameterBag' => __DIR__ . '/../..' . '/Package/symfony/http-foundation/ParameterBag.php',
+        'Symfony\\Component\\HttpFoundation\\Request' => __DIR__ . '/../..' . '/Package/symfony/http-foundation/Request.php',
+        'Symfony\\Component\\HttpFoundation\\ServerBag' => __DIR__ . '/../..' . '/Package/symfony/http-foundation/ServerBag.php',
     );
 
     public static function getInitializer(ClassLoader $loader)

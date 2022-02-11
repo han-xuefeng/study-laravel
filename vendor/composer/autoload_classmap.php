@@ -13,4 +13,8 @@ return array(
     'Illuminate\\Contracts\\Container\\BindingResolutionException' => $baseDir . '/Package/laravel/framework/src/illuminate/Contracts/Container/BindingResolutionException.php',
     'Illuminate\\Contracts\\Container\\ContextualBindingBuilder' => $baseDir . '/Package/laravel/framework/src/illuminate/Contracts/Container/ContextualBindingBuilder.php',
     'Illuminate\\Support\\Arr' => $baseDir . '/Package/laravel/framework/src/illuminate/Support/Arr.php',
+    'Symfony\\Component\\HttpFoundation\\FileBag' => $baseDir . '/Package/symfony/http-foundation/FileBag.php',
+    'Symfony\\Component\\HttpFoundation\\ParameterBag' => $baseDir . '/Package/symfony/http-foundation/ParameterBag.php',
+    'Symfony\\Component\\HttpFoundation\\Request' => $baseDir . '/Package/symfony/http-foundation/Request.php',
+    'Symfony\\Component\\HttpFoundation\\ServerBag' => $baseDir . '/Package/symfony/http-foundation/ServerBag.php',
 );
