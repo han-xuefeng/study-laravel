@@ -12,5 +12,8 @@ require __DIR__.'/../vendor/autoload.php';
 
 $request = Request::create('http:127.0.0.1/a?b=2');
 
-echo '<pre>';
-print_r($request);
+foreach ($request->query as $key => $value)
+{
+    var_dump($key);
+    var_dump($value);
+}
