@@ -17,3 +17,5 @@ foreach ($request->query as $key => $value)
     var_dump($key);
     var_dump($value);
 }
+
+var_dump($request->getPort());
