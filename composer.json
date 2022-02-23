@@ -5,7 +5,7 @@
     "license": "MIT",
     "type": "project",
     "require": {
-
+      "ext-json": "*"
     },
     "autoload": {
         "classmap": ["Package"]
