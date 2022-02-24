@@ -2,6 +2,7 @@
 
 
 use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 
 if (! function_exists('data_get')) {
     /**
@@ -47,5 +48,18 @@ if (! function_exists('data_get')) {
         }
 
         return $target;
+    }
+
+    if (! function_exists('value')) {
+        /**
+         * Return the default value of the given value.
+         *
+         * @param  mixed  $value
+         * @return mixed
+         */
+        function value($value)
+        {
+            return $value instanceof Closure ? $value() : $value;
+        }
     }
 }
