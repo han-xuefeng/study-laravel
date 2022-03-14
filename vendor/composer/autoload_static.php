@@ -6,16 +6,59 @@ namespace Composer\Autoload;
 
 class ComposerStaticInita28ebe6f2b01a72b6cbf95a83877fd07
 {
+    public static $prefixLengthsPsr4 = array (
+        'P' => 
+        array (
+            'Psr\\Container\\' => 14,
+        ),
+    );
+
+    public static $prefixDirsPsr4 = array (
+        'Psr\\Container\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/container/src',
+        ),
+    );
+
     public static $classMap = array (
         'Attribute' => __DIR__ . '/../..' . '/Package/symfony/polyfill-php80/Resources/stubs/Attribute.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
+        'Dotenv\\Dotenv' => __DIR__ . '/../..' . '/Package/vlucas/phpdotenv/src/Dotenv.php',
+        'Dotenv\\Environment\\AbstractVariables' => __DIR__ . '/../..' . '/Package/vlucas/phpdotenv/src/Environment/AbstractVariables.php',
+        'Dotenv\\Environment\\Adapter\\AdapterInterface' => __DIR__ . '/../..' . '/Package/vlucas/phpdotenv/src/Environment/Adapter/AdapterInterface.php',
+        'Dotenv\\Environment\\Adapter\\ApacheAdapter' => __DIR__ . '/../..' . '/Package/vlucas/phpdotenv/src/Environment/Adapter/ApacheAdapter.php',
+        'Dotenv\\Environment\\Adapter\\ArrayAdapter' => __DIR__ . '/../..' . '/Package/vlucas/phpdotenv/src/Environment/Adapter/ArrayAdapter.php',
+        'Dotenv\\Environment\\Adapter\\EnvConstAdapter' => __DIR__ . '/../..' . '/Package/vlucas/phpdotenv/src/Environment/Adapter/EnvConstAdapter.php',
+        'Dotenv\\Environment\\Adapter\\PutenvAdapter' => __DIR__ . '/../..' . '/Package/vlucas/phpdotenv/src/Environment/Adapter/PutenvAdapter.php',
+        'Dotenv\\Environment\\Adapter\\ServerConstAdapter' => __DIR__ . '/../..' . '/Package/vlucas/phpdotenv/src/Environment/Adapter/ServerConstAdapter.php',
+        'Dotenv\\Environment\\DotenvFactory' => __DIR__ . '/../..' . '/Package/vlucas/phpdotenv/src/Environment/DotenvFactory.php',
+        'Dotenv\\Environment\\DotenvVariables' => __DIR__ . '/../..' . '/Package/vlucas/phpdotenv/src/Environment/DotenvVariables.php',
+        'Dotenv\\Environment\\FactoryInterface' => __DIR__ . '/../..' . '/Package/vlucas/phpdotenv/src/Environment/FactoryInterface.php',
+        'Dotenv\\Environment\\VariablesInterface' => __DIR__ . '/../..' . '/Package/vlucas/phpdotenv/src/Environment/VariablesInterface.php',
+        'Dotenv\\Exception\\ExceptionInterface' => __DIR__ . '/../..' . '/Package/vlucas/phpdotenv/src/Exception/ExceptionInterface.php',
+        'Dotenv\\Exception\\InvalidFileException' => __DIR__ . '/../..' . '/Package/vlucas/phpdotenv/src/Exception/InvalidFileException.php',
+        'Dotenv\\Exception\\InvalidPathException' => __DIR__ . '/../..' . '/Package/vlucas/phpdotenv/src/Exception/InvalidPathException.php',
+        'Dotenv\\Exception\\ValidationException' => __DIR__ . '/../..' . '/Package/vlucas/phpdotenv/src/Exception/ValidationException.php',
+        'Dotenv\\Lines' => __DIR__ . '/../..' . '/Package/vlucas/phpdotenv/src/Lines.php',
+        'Dotenv\\Loader' => __DIR__ . '/../..' . '/Package/vlucas/phpdotenv/src/Loader.php',
+        'Dotenv\\Parser' => __DIR__ . '/../..' . '/Package/vlucas/phpdotenv/src/Parser.php',
+        'Dotenv\\Regex\\Error' => __DIR__ . '/../..' . '/Package/vlucas/phpdotenv/src/Regex/Error.php',
+        'Dotenv\\Regex\\Regex' => __DIR__ . '/../..' . '/Package/vlucas/phpdotenv/src/Regex/Regex.php',
+        'Dotenv\\Regex\\Result' => __DIR__ . '/../..' . '/Package/vlucas/phpdotenv/src/Regex/Result.php',
+        'Dotenv\\Regex\\Success' => __DIR__ . '/../..' . '/Package/vlucas/phpdotenv/src/Regex/Success.php',
+        'Dotenv\\Validator' => __DIR__ . '/../..' . '/Package/vlucas/phpdotenv/src/Validator.php',
         'Illuminate\\Container\\BoundMethod' => __DIR__ . '/../..' . '/Package/laravel/framework/src/illuminate/Container/BoundMethod.php',
         'Illuminate\\Container\\Container' => __DIR__ . '/../..' . '/Package/laravel/framework/src/illuminate/Container/Container.php',
         'Illuminate\\Container\\ContextualBindingBuilder' => __DIR__ . '/../..' . '/Package/laravel/framework/src/illuminate/Container/ContextualBindingBuilder.php',
+        'Illuminate\\Container\\EntryNotFoundException' => __DIR__ . '/../..' . '/Package/laravel/framework/src/illuminate/Container/EntryNotFoundException.php',
         'Illuminate\\Contracts\\Container\\BindingResolutionException' => __DIR__ . '/../..' . '/Package/laravel/framework/src/illuminate/Contracts/Container/BindingResolutionException.php',
+        'Illuminate\\Contracts\\Container\\Container' => __DIR__ . '/../..' . '/Package/laravel/framework/src/illuminate/Contracts/Container/Container.php',
         'Illuminate\\Contracts\\Container\\ContextualBindingBuilder' => __DIR__ . '/../..' . '/Package/laravel/framework/src/illuminate/Contracts/Container/ContextualBindingBuilder.php',
+        'Illuminate\\Contracts\\Foundation\\Application' => __DIR__ . '/../..' . '/Package/laravel/framework/src/illuminate/Contracts/Foundation/Application.php',
         'Illuminate\\Contracts\\Support\\Arrayable' => __DIR__ . '/../..' . '/Package/laravel/framework/src/illuminate/Contracts/Support/Arrayable.php',
         'Illuminate\\Contracts\\Support\\Jsonable' => __DIR__ . '/../..' . '/Package/laravel/framework/src/illuminate/Contracts/Support/Jsonable.php',
+        'Illuminate\\Foundation\\Application' => __DIR__ . '/../..' . '/Package/laravel/framework/src/illuminate/Foundation/Application.php',
+        'Illuminate\\Foundation\\Bootstrap\\LoadEnvironmentVariables' => __DIR__ . '/../..' . '/Package/laravel/framework/src/illuminate/Foundation/Bootstrap/LoadEnvironmentVariables.php',
         'Illuminate\\Http\\Concerns\\InteractsWithContentTypes' => __DIR__ . '/../..' . '/Package/laravel/framework/src/illuminate/Http/Concerns/InteractsWithContentTypes.php',
         'Illuminate\\Http\\Concerns\\InteractsWithInput' => __DIR__ . '/../..' . '/Package/laravel/framework/src/illuminate/Http/Concerns/InteractsWithInput.php',
         'Illuminate\\Http\\Request' => __DIR__ . '/../..' . '/Package/laravel/framework/src/illuminate/Http/Request.php',
@@ -24,6 +67,10 @@ class ComposerStaticInita28ebe6f2b01a72b6cbf95a83877fd07
         'Illuminate\\Support\\HigherOrderCollectionProxy' => __DIR__ . '/../..' . '/Package/laravel/framework/src/illuminate/Support/HigherOrderCollectionProxy.php',
         'Illuminate\\Support\\Str' => __DIR__ . '/../..' . '/Package/laravel/framework/src/illuminate/Support/Str.php',
         'Illuminate\\Support\\Traits\\Macroable' => __DIR__ . '/../..' . '/Package/laravel/framework/src/illuminate/Support/Traits/Macroable.php',
+        'PhpOption\\LazyOption' => __DIR__ . '/../..' . '/Package/phpoption/phpoption/src/PhpOption/LazyOption.php',
+        'PhpOption\\None' => __DIR__ . '/../..' . '/Package/phpoption/phpoption/src/PhpOption/None.php',
+        'PhpOption\\Option' => __DIR__ . '/../..' . '/Package/phpoption/phpoption/src/PhpOption/Option.php',
+        'PhpOption\\Some' => __DIR__ . '/../..' . '/Package/phpoption/phpoption/src/PhpOption/Some.php',
         'Stringable' => __DIR__ . '/../..' . '/Package/symfony/polyfill-php80/Resources/stubs/Stringable.php',
         'Symfony\\Component\\HttpFoundation\\AcceptHeader' => __DIR__ . '/../..' . '/Package/symfony/http-foundation/AcceptHeader.php',
         'Symfony\\Component\\HttpFoundation\\AcceptHeaderItem' => __DIR__ . '/../..' . '/Package/symfony/http-foundation/AcceptHeaderItem.php',
@@ -177,6 +224,8 @@ class ComposerStaticInita28ebe6f2b01a72b6cbf95a83877fd07
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
+            $loader->prefixLengthsPsr4 = ComposerStaticInita28ebe6f2b01a72b6cbf95a83877fd07::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInita28ebe6f2b01a72b6cbf95a83877fd07::$prefixDirsPsr4;
             $loader->classMap = ComposerStaticInita28ebe6f2b01a72b6cbf95a83877fd07::$classMap;
 
         }, null, ClassLoader::class);
